@@ -2,6 +2,19 @@ require_relative "./tree_node.rb"
 require_relative "./class_a.rb"
 
 class CallTracer
+  EXCLUDED_PATHS = %i[
+    rbenv
+    gems
+    internal
+    activemodel
+    active_record
+    active_support
+    activesupport
+    ddtrace
+    timecop
+    logger
+  ]
+
   def initialize(root_object, method_name, *args, **kwargs)
     @root_object = root_object
     @method_name = method_name
@@ -20,6 +33,7 @@ class CallTracer
 
     tracer = TracePoint.new(:call, :return) do |tp|
       next unless tp.method_id
+      next if EXCLUDED_PATHS.any? { |str| tp.path.include?(str.to_s) }
 
       if tp.event == :call
         args_str = extract_arguments(tp)
