@@ -2,6 +2,10 @@
 
 source "https://rubygems.org"
 
-# gem "rails"
+# Specify your gem's dependencies in tracer.gemspec
+gemspec
 
-gem "pry"
+gem "irb"
+gem "rake", "~> 13.0"
+
+gem "rspec", "~> 3.0"
